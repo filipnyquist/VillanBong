@@ -1,8 +1,12 @@
 const Zettle = require("./zettle");
 const Printer = require("./printer");
-const logger = require("pino")();
 require("dotenv").config(); // Load vars from env file.
+const logger = require("pino")({ level: process.env.LOG_LEVEL || "info" });
 let orderId = 0; // Temp var for order IDs.
+// Printer stuff
+const registerOne = new Printer("tcp://1.1.1.1:9200", "STAR"); // Register one, "Kassa 1".
+const registerTwo = new Printer("tcp://1.1.1.1:9200", "STAR"); // Register two, "Kassa 2".
+const kitchen = new Printer("tcp://1.1.1.1:9200", "EPSON"); // Printer down in the kitchen, epson printer.
 // Lets setup our API.
 let api = new Zettle({
   clientId: process.env.CLIENT_ID,

@@ -1,4 +1,5 @@
-const logger = require("pino")();
+require("dotenv").config(); // Load vars from env file.
+const logger = require("pino")({ level: process.env.LOG_LEVEL || "info" });
 const ThermalPrinter = require("node-thermal-printer").printer;
 const PrinterTypes = require("node-thermal-printer").types;
 const { createCanvas } = require("canvas");
@@ -6,15 +7,15 @@ const { createCanvas } = require("canvas");
 class Printer {
   /** Node.JS compatible thermal printer module for Villans printers.
    *
-   * @param {String} interface Interface of the printer, in format "tcp://X.X.X.X:XXXX"
+   * @param {String} netPath netPath of the printer, in format "tcp://X.X.X.X:XXXX"
    * @param {String} type The type of printer, EPSON or STAR.
    */
-  constructor(interface, type) {
-    this.interface = interface;
+  constructor(netPath, type) {
+    this.netPath = netPath;
     this.printerType = PrinterTypes[type];
     this.printer = new ThermalPrinter({
       type: printerType, // Printer type: 'star' or 'epson'
-      interface: interface, // Printer interface
+      netPath: netPath, // Printer netPath
       characterSet: "PC865_NORDIC", // Printer character set - ISO8859_15_LATIN9
       removeSpecialCharacters: false, // Removes special characters - default: false
       lineCharacter: "=", // Set character for lines - default: "-"
@@ -24,7 +25,7 @@ class Printer {
       },
       width: 48,
     });
-    logger.info(`Initialized printer interace at interface ${interface}`);
+    logger.info(`Initialized printer interace at netPath ${netPath}`);
   }
   /** Generates a picture "MAX-style" of the order id supplied.
    *

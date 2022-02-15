@@ -1,4 +1,6 @@
 const axios = require("axios");
+require("dotenv").config(); // Load vars from env file.
+const logger = require("pino")({ level: process.env.LOG_LEVEL || "info" });
 /**
  * Class for the communication with the Zettle order API.
  */
@@ -9,6 +11,7 @@ class Zettle {
     this.organizationUuid = args[0].organizationUuid || "self";
     this.token = null;
     this.tokenExp = new Date().getTime();
+    logger.debug("Initialized Zettle API instance.");
   }
 
   /**
@@ -17,9 +20,11 @@ class Zettle {
    */
   async hasValidToken() {
     if (this.tokenExp < new Date().getTime()) {
+      logger.debug("Token has expired, getting a new one.");
       await this.getToken();
       return true;
     } else {
+      logger.debug("Auth token still valid , using it.");
       return true;
     }
   }
@@ -35,6 +40,7 @@ class Zettle {
     });
     this.token = res.data.access_token;
     this.tokenExp = new Date().getTime() + res.data.expires_in * 1000;
+    logger.debug("Got back a new token from Zettle, saved it down.");
     return true;
   }
   /**
@@ -44,6 +50,7 @@ class Zettle {
    * @returns
    */
   async getLatestPurchases(limit, descending) {
+    logger.debug(`Grabbing ${limit} latest purchases, desc: ${descending}.`);
     await this.hasValidToken();
     let res = await axios({
       method: "get",
@@ -52,6 +59,7 @@ class Zettle {
         Authorization: `Bearer ${this.token}`,
       },
     });
+    logger.debug(`Got back the latest purchases.`);
     return res.data;
   }
 }
