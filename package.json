@@ -1,0 +1,27 @@
+{
+  "name": "ohmydingdingbong",
+  "version": "1.0.0",
+  "description": "Bong/food system for Studentpuben Villan",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/filipnyquist/VillanBong.git"
+  },
+  "author": "Mr.Mime <f@nyqui.st>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/filipnyquist/VillanBong/issues"
+  },
+  "homepage": "https://github.com/filipnyquist/VillanBong#readme",
+  "dependencies": {
+    "axios": "^0.26.0",
+    "canvas": "^2.9.0",
+    "dotenv": "^16.0.0",
+    "node-cron": "^3.0.0",
+    "node-thermal-printer": "^4.1.2",
+    "pino": "^7.8.0"
+  }
+}
